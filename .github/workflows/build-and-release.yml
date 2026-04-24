@@ -26,6 +26,14 @@ jobs:
       - name: Build Windows EXE
         run: npx electron-builder --win --x64 --publish never
 
+      - name: Create Self-Signed Certificate and Sign EXE
+        shell: pwsh
+        run: |
+          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=MiraeBizon, O=MiraeBizon Inc" -CertStoreLocation Cert:\CurrentUser\My -NotAfter (Get-Date).AddYears(3)
+          $exe = Get-ChildItem dist\*.exe | Select-Object -First 1
+          Set-AuthenticodeSignature -FilePath $exe.FullName -Certificate $cert -TimestampServer "http://timestamp.digicert.com"
+          Write-Host "Signed: $($exe.Name)"
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
