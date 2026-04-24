@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 480px; height: 360px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+  -webkit-app-region: drag; user-select: none;
+}
+.card {
+  width: 440px; padding: 48px 40px 40px;
+  background: #ffffff; border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.logo {
+  width: 64px; height: 64px; border-radius: 16px;
+  background: linear-gradient(135deg, #03C75A, #00A348);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 32px;
+  box-shadow: 0 8px 24px rgba(3, 199, 90, 0.3);
+}
+.title {
+  font-size: 22px; font-weight: 800; color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 13px; color: #868e96; margin-bottom: 28px;
+}
+.progress-wrap {
+  width: 100%; height: 4px; border-radius: 2px;
+  background: #f1f3f5; overflow: hidden; margin-bottom: 14px;
+}
+.progress-bar {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, #03C75A, #00A348);
+  animation: load 2.5s ease-in-out infinite;
+}
+@keyframes load {
+  0% { width: 0%; }
+  50% { width: 80%; }
+  100% { width: 100%; }
+}
+.status {
+  font-size: 12px; color: #adb5bd;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.version {
+  font-size: 10px; color: #ced4da; margin-top: 16px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🔍</div>
+  <div class="title">미래비즈온</div>
+  <div class="subtitle">AI 타지역서비스 분석툴</div>
+  <div class="progress-wrap">
+    <div class="progress-bar"></div>
+  </div>
+  <div class="status">서버 연결 중...</div>
+  <div class="version">v1.0.0-beta</div>
+</div>
+</body>
+</html>

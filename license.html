@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:520px;height:440px;display:flex;align-items:center;justify-content:center;background:transparent;font-family:'Segoe UI','Malgun Gothic',sans-serif;-webkit-app-region:drag;user-select:none}
+.card{width:480px;padding:40px 36px 32px;background:#fff;border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05)}
+.logo{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#03C75A,#00A348);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;box-shadow:0 6px 20px rgba(3,199,90,0.3)}
+.title{font-size:20px;font-weight:800;color:#1a1a1a;text-align:center;margin-bottom:4px}
+.subtitle{font-size:13px;color:#868e96;text-align:center;margin-bottom:28px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:700;color:#495057;margin-bottom:6px;letter-spacing:0.5px}
+.field input{width:100%;padding:14px 16px;border:2px solid #e9ecef;border-radius:10px;font-size:18px;font-weight:700;text-align:center;letter-spacing:4px;text-transform:uppercase;outline:none;font-family:inherit;-webkit-app-region:no-drag;transition:border-color 0.2s}
+.field input:focus{border-color:#03C75A;box-shadow:0 0 0 3px rgba(3,199,90,0.15)}
+.field input::placeholder{font-size:14px;letter-spacing:1px;color:#ced4da;font-weight:400}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;background:linear-gradient(135deg,#03C75A,#00A348);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;-webkit-app-region:no-drag;transition:all 0.2s;box-shadow:0 4px 16px rgba(3,199,90,0.3)}
+.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-secondary{background:#f1f3f5;color:#495057;box-shadow:none;margin-top:8px;font-size:13px;font-weight:600}
+.btn-secondary:hover{background:#e9ecef}
+.msg{text-align:center;font-size:13px;margin-top:14px;min-height:20px;line-height:1.5}
+.msg.error{color:#f03e3e}
+.msg.success{color:#03C75A}
+.msg.loading{color:#868e96}
+.info{font-size:11px;color:#adb5bd;text-align:center;margin-top:16px;line-height:1.6}
+.machine-id{font-size:10px;color:#ced4da;text-align:center;margin-top:12px;font-family:monospace;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🔍</div>
+  <div class="title">미래비즈온 AI분석툴</div>
+  <div class="subtitle">베타 테스트 라이선스 인증</div>
+  
+  <div class="field">
+    <label>라이선스 키</label>
+    <input type="text" id="keyInput" placeholder="BETA-XXXX-XXXX" maxlength="14" autocomplete="off">
+  </div>
+  
+  <button class="btn" id="activateBtn" onclick="activate()">인증하기</button>
+  <button class="btn btn-secondary" onclick="window.close()">종료</button>
+  
+  <div class="msg" id="msg"></div>
+  <div class="info">라이선스 키가 없으시면 미래비즈온에 문의하세요<br>📞 1600-0251 | 💬 카카오톡 상담</div>
+  <div class="machine-id" id="machineId"></div>
+</div>
+
+<script>
+  // Machine ID 표시
+  window.electronAPI.getMachineId().then(id => {
+    document.getElementById('machineId').textContent = 'Machine: ' + id.substring(0, 12) + '...';
+  });
+
+  // 키 입력 포맷팅 (자동 하이픈)
+  document.getElementById('keyInput').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (v.length > 4) v = v.substring(0,4) + '-' + v.substring(4);
+    if (v.length > 9) v = v.substring(0,9) + '-' + v.substring(9);
+    e.target.value = v.substring(0, 14);
+  });
+
+  // Enter 키
+  document.getElementById('keyInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') activate();
+  });
+
+  async function activate() {
+    const key = document.getElementById('keyInput').value.trim();
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('activateBtn');
+    
+    if (!key || key.length < 10) {
+      msg.className = 'msg error';
+      msg.textContent = '올바른 라이선스 키를 입력해주세요.';
+      return;
+    }
+    
+    btn.disabled = true;
+    msg.className = 'msg loading';
+    msg.textContent = '인증 확인 중...';
+    
+    try {
+      const result = await window.electronAPI.activateLicense(key);
+      if (result.success) {
+        msg.className = 'msg success';
+        msg.textContent = '✅ ' + (result.message || '인증 완료! 앱을 시작합니다...');
+        setTimeout(() => {
+          window.electronAPI.launchApp();
+        }, 1500);
+      } else {
+        msg.className = 'msg error';
+        msg.textContent = '❌ ' + (result.message || '인증 실패');
+        btn.disabled = false;
+      }
+    } catch(e) {
+      msg.className = 'msg error';
+      msg.textContent = '❌ 서버 연결 실패. 인터넷을 확인하세요.';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
