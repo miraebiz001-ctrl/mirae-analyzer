@@ -25,12 +25,7 @@
     "appId": "com.miraebiz.analyzer",
     "productName": "MiraeBizon-AI-Analyzer",
     "copyright": "Copyright © 2026 미래비즈온",
-    "publish": {
-      "provider": "github",
-      "owner": "miraebiz",
-      "repo": "mirae-analyzer",
-      "releaseType": "release"
-    },
+
     "directories": {
       "output": "dist"
     },
