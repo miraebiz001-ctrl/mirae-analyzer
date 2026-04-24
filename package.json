@@ -27,7 +27,7 @@
     "copyright": "Copyright © 2026 미래비즈온",
     "publish": {
       "provider": "github",
-      "owner": "YOUR_GITHUB_USERNAME",
+      "owner": "miraebiz",
       "repo": "mirae-analyzer",
       "releaseType": "release"
     },
