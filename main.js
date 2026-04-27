@@ -65,7 +65,7 @@ function createSplash() {
 
 // 라이선스 화면
 function createLicenseWindow(msg) {
-  licenseWindow = new BrowserWindow({ width:520, height:460, frame:false, resizable:false, transparent:true, center:true, webPreferences:{nodeIntegration:false,contextIsolation:true,preload:path.join(__dirname,'preload.js')} });
+  licenseWindow = new BrowserWindow({ width:560, height:560, frame:false, resizable:false, transparent:true, center:true, webPreferences:{nodeIntegration:false,contextIsolation:true,preload:path.join(__dirname,'preload.js')} });
   licenseWindow.loadFile('license.html');
   if (splashWindow && !splashWindow.isDestroyed()) { splashWindow.close(); splashWindow = null; }
 }
